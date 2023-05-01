@@ -9,8 +9,8 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/dddsphere/topspin"
-	"github.com/dddsphere/topspin/examples/todo/cqrs/bus/nats"
-	"github.com/dddsphere/topspin/examples/todo/cqrs/command"
+	"github.com/dddsphere/topspin/examples/todo/internal/cqrs/bus/nats"
+	"github.com/dddsphere/topspin/examples/todo/internal/cqrs/command"
 )
 
 type (

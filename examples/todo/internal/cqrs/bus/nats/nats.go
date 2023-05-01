@@ -9,7 +9,7 @@ import (
 	"github.com/nats-io/nats.go"
 
 	"github.com/dddsphere/topspin"
-	"github.com/dddsphere/topspin/examples/todo/config"
+	"github.com/dddsphere/topspin/examples/todo/pkg/config"
 )
 
 type (
