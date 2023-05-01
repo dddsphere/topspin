@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"github.com/dddsphere/topspin"
-	"github.com/dddsphere/topspin/examples/todo/service"
+	"github.com/dddsphere/topspin/examples/todo/internal/service"
 )
 
 type (
