@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/dddsphere/topspin/examples/todo/core"
+	"github.com/dddsphere/topspin/examples/todo/internal/core"
 )
 
 type (

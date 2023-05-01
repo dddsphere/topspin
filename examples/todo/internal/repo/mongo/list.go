@@ -4,13 +4,12 @@ import (
 	"context"
 	"errors"
 
-	"github.com/dddsphere/topspin"
-	"github.com/dddsphere/topspin/examples/todo/config"
-	"github.com/dddsphere/topspin/examples/todo/core"
-
 	"github.com/google/uuid"
 
+	"github.com/dddsphere/topspin"
 	db "github.com/dddsphere/topspin/db/mongo"
+	"github.com/dddsphere/topspin/examples/todo/internal/core"
+	"github.com/dddsphere/topspin/examples/todo/pkg/config"
 )
 
 type (
