@@ -49,7 +49,7 @@ func NewServer(name string, log Logger) *Server {
 }
 
 func (srv *Server) Name() string {
-	return srv.Name()
+	return srv.name
 }
 
 func (srv *Server) SetRouter(r *Router) {
