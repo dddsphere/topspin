@@ -9,9 +9,9 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/dddsphere/topspin"
-	"github.com/dddsphere/topspin/examples/todo/config"
-	"github.com/dddsphere/topspin/examples/todo/core"
-	"github.com/dddsphere/topspin/examples/todo/repo"
+	core2 "github.com/dddsphere/topspin/examples/todo/internal/core"
+	"github.com/dddsphere/topspin/examples/todo/internal/repo"
+	"github.com/dddsphere/topspin/examples/todo/pkg/config"
 )
 
 type (
@@ -21,7 +21,7 @@ type (
 		cqrs        *topspin.CQRSManager
 		repoRead    repo.ListRead
 		repoWrite   repo.ListWrite
-		listService *core.List
+		listService *core2.List
 	}
 )
 
@@ -53,7 +53,7 @@ func (t *Todo) CreateList(ctx context.Context, name, description string) error {
 	slug := strings.Split(uid.String(), "-")[4]
 
 	// WIP: Filling empty fields with fake data
-	return t.repoWrite.Create(ctx, core.List{
+	return t.repoWrite.Create(ctx, core2.List{
 		ID:          uid,
 		UserID:      uuid.New(),
 		Slug:        slug,
@@ -62,6 +62,6 @@ func (t *Todo) CreateList(ctx context.Context, name, description string) error {
 		OwnerID:     uuid.New(),
 		Name:        "list name",
 		Description: "list description",
-		Items:       []core.Item{},
+		Items:       []core2.Item{},
 	})
 }

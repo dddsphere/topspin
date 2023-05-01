@@ -6,12 +6,12 @@ import (
 	"sync"
 
 	"github.com/dddsphere/topspin"
-	"github.com/dddsphere/topspin/examples/todo/adapter/rest"
-	"github.com/dddsphere/topspin/examples/todo/config"
-	"github.com/dddsphere/topspin/examples/todo/cqrs/bus/nats"
-	"github.com/dddsphere/topspin/examples/todo/cqrs/command"
-	"github.com/dddsphere/topspin/examples/todo/ports/openapi"
-	"github.com/dddsphere/topspin/examples/todo/service"
+	rest2 "github.com/dddsphere/topspin/examples/todo/internal/adapter/rest"
+	"github.com/dddsphere/topspin/examples/todo/internal/cqrs/bus/nats"
+	"github.com/dddsphere/topspin/examples/todo/internal/cqrs/command"
+	"github.com/dddsphere/topspin/examples/todo/internal/ports/openapi"
+	"github.com/dddsphere/topspin/examples/todo/internal/service"
+	"github.com/dddsphere/topspin/examples/todo/pkg/config"
 )
 
 type (
@@ -30,7 +30,7 @@ type (
 		// NATS
 		Bus *nats.BusManager
 
-		RESTServer *rest.Server
+		RESTServer *rest2.Server
 		//WebServer     *web.Server
 		//GRPCServer    *grpc.Server
 	}
@@ -60,7 +60,7 @@ func (app *App) Init() (err error) {
 
 	// Router
 	if app.RESTServer != nil {
-		rm := rest.NewRequestManager(app.CQRS, app.Bus, app.Log())
+		rm := rest2.NewRequestManager(app.CQRS, app.Bus, app.Log())
 		h := openapi.Handler(rm)
 		app.RESTServer.InitRESTRouter(h)
 	}

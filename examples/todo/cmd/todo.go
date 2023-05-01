@@ -7,14 +7,12 @@ import (
 	"syscall"
 
 	"github.com/dddsphere/topspin"
-	"github.com/dddsphere/topspin/examples/todo"
-	"github.com/dddsphere/topspin/examples/todo/adapter/rest"
-
-	"github.com/dddsphere/topspin/examples/todo/cqrs/bus/nats"
-	"github.com/dddsphere/topspin/examples/todo/repo/mongo"
-	"github.com/dddsphere/topspin/examples/todo/service"
-
 	db "github.com/dddsphere/topspin/db/mongo"
+	"github.com/dddsphere/topspin/examples/todo"
+	"github.com/dddsphere/topspin/examples/todo/internal/adapter/rest"
+	nats2 "github.com/dddsphere/topspin/examples/todo/internal/cqrs/bus/nats"
+	"github.com/dddsphere/topspin/examples/todo/internal/repo/mongo"
+	"github.com/dddsphere/topspin/examples/todo/internal/service"
 )
 
 const (
@@ -65,9 +63,9 @@ func main() {
 	a.RESTServer = rest.NewServer("rest-server", &cfg, log)
 
 	// Bus
-	nc := nats.NewClient("nats-client", &cfg, log)
+	nc := nats2.NewClient("nats-client", &cfg, log)
 
-	a.Bus = nats.NewBusManager("nats-bus", &cfg, nc, log)
+	a.Bus = nats2.NewBusManager("nats-bus", &cfg, nc, log)
 
 	// Init & Start
 	err = a.InitAndStart()
