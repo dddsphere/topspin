@@ -9,7 +9,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/dddsphere/topspin"
-	core2 "github.com/dddsphere/topspin/examples/todo/internal/core"
+	core2 "github.com/dddsphere/topspin/examples/todo/internal/domain"
 	"github.com/dddsphere/topspin/examples/todo/internal/repo"
 	"github.com/dddsphere/topspin/examples/todo/pkg/config"
 )

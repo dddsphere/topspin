@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"github.com/dddsphere/topspin"
-	rest2 "github.com/dddsphere/topspin/examples/todo/internal/adapter/rest"
+	rest2 "github.com/dddsphere/topspin/examples/todo/internal/adapterpri/rest"
 	"github.com/dddsphere/topspin/examples/todo/internal/cqrs/bus/nats"
 	"github.com/dddsphere/topspin/examples/todo/internal/cqrs/command"
 	"github.com/dddsphere/topspin/examples/todo/internal/ports/openapi"
