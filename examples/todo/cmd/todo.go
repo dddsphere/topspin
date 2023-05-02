@@ -9,7 +9,7 @@ import (
 	"github.com/dddsphere/topspin"
 	db "github.com/dddsphere/topspin/db/mongo"
 	"github.com/dddsphere/topspin/examples/todo"
-	"github.com/dddsphere/topspin/examples/todo/internal/adapter/rest"
+	"github.com/dddsphere/topspin/examples/todo/internal/adapterpri/rest"
 	nats2 "github.com/dddsphere/topspin/examples/todo/internal/cqrs/bus/nats"
 	"github.com/dddsphere/topspin/examples/todo/internal/repo/mongo"
 	"github.com/dddsphere/topspin/examples/todo/internal/service"
