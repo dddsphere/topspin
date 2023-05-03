@@ -31,7 +31,7 @@ func NewRequestManager(cqrs *topspin.CQRSManager, bus *nats.BusManager, log tops
 }
 
 // Dispatch is a WIP: This can be improved,
-// Maybe delegate the action to the command itself right here
+// Maybe delegating the action to the command itself right here
 // but removing first the concrete actions from the OpenAPI specifications.
 // so the handlers don't have to adjust to the interface (response/request interface)
 // and code and checks duplication is avoided.

@@ -36,7 +36,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	initExitMonitor(ctx, cancel)
 
-	// Database
+	// Databases
 	mgo := db.NewMongoClient("mongo-client", db.Config{
 		Host:       cfg.Mongo.Host,
 		Port:       cfg.Mongo.Port,
@@ -46,12 +46,12 @@ func main() {
 		MaxRetries: cfg.Mongo.MaxRetriesUInt64(),
 	}, log)
 
-	// Repo
+	// Repos
 	lrr := mongo.NewListRead("list-read-repo", mgo, &cfg, log)
 
 	lwr := mongo.NewListWrite("list-write-repo", mgo, &cfg, log)
 
-	// Service
+	// Services
 	ts, err := service.NewTodo("todo-app-service", lrr, lwr, &cfg, log)
 	if err != nil {
 		exit(err)
