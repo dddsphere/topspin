@@ -1,3 +1,29 @@
 @startuml
-Client -> REST Server: test
+title Basic Sequence Diagram
+
+actor Client
+participant "REST API Server" as Server
+participant "Request Manager" as Manager
+participant Command
+participant "Service Bus (NATS)" as Bus
+participant "Command Handler" as Handler
+
+Client -> Server: (HTTP Request)
+Client <-- Server: HTTP 200 with request ID
+
+Server -> Manager: forwards request
+Manager -> Command: creates command
+Command -> Bus: publishes command on "command" topic
+Bus --> Handler: delivers command
+
+Handler -> Bus: publishes outcome with request ID and result (if any) on "outcome" topic
+
+Manager -> Bus: subscribes to "outcome" topic for all messages
+Manager <-- Bus: receives message(s) from "outcome" topic
+
+Client -> Server: (HTTP Request) Query providing request identifier.
+Server -> Manager: forwards request
+Manager -> Server: Command outcome if available
+Client <-- Server: HTTP 200 with payload if available
+
 @enduml
