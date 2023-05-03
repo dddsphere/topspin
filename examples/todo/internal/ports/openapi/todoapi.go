@@ -14,7 +14,6 @@ import (
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
-
 	// (POST /cmd/{command})
 	Dispatch(w http.ResponseWriter, r *http.Request, command string)
 }
