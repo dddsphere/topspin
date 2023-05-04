@@ -40,7 +40,5 @@ curl --location --request POST 'http://localhost:8081/api/v1/cmd/create-list' \
 
 ## Acknowledging reception
 ```shell
-$ make run
-go run cmd/todo.go
 [INF] 2023/05/04 21:10:07.036731 Received a command event with ID: 398aa599-9459-4135-b555-06befa2b8b2e
 ```
