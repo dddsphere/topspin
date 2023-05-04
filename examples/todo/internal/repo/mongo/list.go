@@ -8,8 +8,8 @@ import (
 
 	"github.com/dddsphere/topspin"
 	db "github.com/dddsphere/topspin/db/mongo"
+	"github.com/dddsphere/topspin/examples/todo/internal/config"
 	"github.com/dddsphere/topspin/examples/todo/internal/domain"
-	"github.com/dddsphere/topspin/examples/todo/pkg/config"
 )
 
 type (

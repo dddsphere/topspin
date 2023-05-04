@@ -7,11 +7,11 @@ import (
 
 	"github.com/dddsphere/topspin"
 	rest2 "github.com/dddsphere/topspin/examples/todo/internal/adapterpri/rest"
+	"github.com/dddsphere/topspin/examples/todo/internal/config"
 	"github.com/dddsphere/topspin/examples/todo/internal/cqrs/bus/nats"
 	"github.com/dddsphere/topspin/examples/todo/internal/cqrs/command"
 	"github.com/dddsphere/topspin/examples/todo/internal/ports/openapi"
 	"github.com/dddsphere/topspin/examples/todo/internal/service"
-	"github.com/dddsphere/topspin/examples/todo/pkg/config"
 )
 
 type (
