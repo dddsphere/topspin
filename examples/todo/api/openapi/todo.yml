@@ -1,0 +1,99 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Todo App
+  description: DDD & CQRS shapping a Go microservice
+  contact:
+    name: Adrian PK
+    url: https://adrianpk.com/
+servers:
+  - url: https://{hostname}/api/v1
+    variables:
+      hostname:
+        default: localhost
+security:
+  - bearerAuth: []
+
+paths:
+  /cmd/{command}:
+    post:
+      operationId: dispatch
+      parameters:
+        - in: path
+          name: command
+          schema:
+            type: string
+          required: true
+          description: Command to be executed
+      requestBody:
+        description: Dispatch commands
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/CreateList'
+      #               - $ref: '#/components/schemas/UpdateLists'
+      #               - $ref: '#/components/schemas/DeleteLists'
+      #               - $ref: '#/components/schemas/GetAllLists'
+      responses:
+        '204':
+          description: todo
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+#  /cmd/create-list:
+#    post:
+#      operationId: createList
+#      requestBody:
+#        description: Create a Todo list
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/CreateList'
+#      responses:
+#        '204':
+#          description: todo
+#        default:
+#          description: unexpected error
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    CreateList:
+      type: object
+      required: [userUUID, name, description]
+      properties:
+        userUUID:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "Todo"
+        description:
+          type: string
+          example: "Buy apples"
+
+    Error:
+      type: object
+      required:
+        - slug
+        - message
+      properties:
+        slug:
+          type: string
+        message:
+          type: string
