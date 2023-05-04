@@ -44,7 +44,7 @@ func (c *Client) Start() error {
 	// Subscriptions
 	// WIP: Not a client responsibility,
 	// Move this up, just only to verify subscriptions are working.
-	c.Subscribe("commands")
+	c.Subscribe(commandSubject)
 
 	return nil
 }
@@ -64,12 +64,11 @@ func (c *Client) address() (address string) {
 }
 
 func (c *Client) PublishEvent(subject string, commandEvent []byte) error {
-	c.Log().Debugf("NATS publishing through: %s", c.conn.ConnectedAddr())
+	c.Log().Infof("NATS publishing through: %s", c.conn.ConnectedAddr())
 
 	err := c.conn.Publish(subject, commandEvent)
 	if err != nil {
 		return fmt.Errorf("NATS client error: %w", err)
-
 	}
 	return nil
 }

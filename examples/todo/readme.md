@@ -20,10 +20,11 @@ $ docker run -p 4222:4222 -ti nats:latest
 ```shell
 $ make run
 go run cmd/todo.go
-[INF] 2023/05/03 20:53:34.805728 NATS client connecting to nats://localhost:4222
-[INF] 2023/05/03 20:53:34.805858 Server rest-server initializing at port :8081
-[INF] 2023/05/03 20:53:34.807780 NATS subscribed through: [::1]:4222
-[INF] 2023/05/03 20:53:34.807921 Listening on 'commands' subject
+[INF] 2023/05/04 21:10:02.378042 NATS client connecting to nats://localhost:4222
+[INF] 2023/05/04 21:10:02.378205 Server rest-server initializing at port :8081
+[INF] 2023/05/04 21:10:02.380262 NATS subscribed through: [::1]:4222
+[INF] 2023/05/04 21:10:02.380424 Listening on 'command' subject
+[INF] 2023/05/04 21:10:07.036192 NATS publishing through: [::1]:4222
 ```
 
 ## Call
@@ -35,4 +36,11 @@ curl --location --request POST 'http://localhost:8081/api/v1/cmd/create-list' \
   "name": "Todo",
   "description": "Buy apples"
 }'
+```
+
+## Acknowledging reception
+```shell
+$ make run
+go run cmd/todo.go
+[INF] 2023/05/04 21:10:07.036731 Received a command event with ID: 398aa599-9459-4135-b555-06befa2b8b2e
 ```
