@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/dddsphere/topspin"
-	"github.com/dddsphere/topspin/examples/todo/pkg/config"
+	"github.com/dddsphere/topspin/examples/todo/internal/config"
 )
 
 const (
