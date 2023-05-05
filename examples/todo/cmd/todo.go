@@ -32,6 +32,14 @@ func main() {
 	a := todo.NewApp(name, version, log)
 	cfg := a.LoadConfig()
 
+	// WIP: Verifying new configuration mechanism
+	config := topspin.NewConfig(name, log)
+	_, err := config.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
+	config.List()
+
 	// Context
 	ctx, cancel := context.WithCancel(context.Background())
 	initExitMonitor(ctx, cancel)
