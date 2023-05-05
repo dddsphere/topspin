@@ -9,7 +9,10 @@ test:
 	go test ./... -v
 
 run:
-	go run cmd/todo.go
+	go run examples/todo/cmd/todo.go --configfile=examples/todo/internal/configs/config.yml
+
+create-list-command:
+	curl --location --request POST "http://localhost:8081/api/v1/cmd/create-list" --header "Content-Type\: application/json" --data-raw "{'userUUID'\: 'e014aa9d-0e21-42a0-953c-46fa3704826a', 'name'\: 'Todo', 'description'\: 'Buy apples'}"
 
 .PHONY: openapihttp
 openapihttp:
