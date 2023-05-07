@@ -30,11 +30,9 @@ func NewRequestManager(cqrs *topspin.CQRSManager, bus *nats.BusManager, log tops
 
 }
 
-// Dispatch is a WIP: This can be improved,
-// Maybe delegating the action to the command itself right here
-// but removing first the concrete actions from the OpenAPI specifications.
-// so the handlers don't have to adjust to the interface (response/request interface)
-// and code and checks duplication is avoided.
+// Dispatch is a WIP:
+// Eventually the commands will return an HTTP 202
+// including headers with relevant metadata (i.e.: request ID).
 func (rm *RequestManager) Dispatch(w http.ResponseWriter, r *http.Request, commandName string) {
 	reqID := genReqID(r)
 
@@ -49,23 +47,26 @@ func (rm *RequestManager) Dispatch(w http.ResponseWriter, r *http.Request, comma
 
 	switch commandName {
 	case "create-list":
-		rm.bus.SendCommand("create-list-command", payload, reqID)
+		err = rm.bus.SendCommand("create-list-command", payload, reqID)
 
 	//case "update-list":
-	//	rm.UpdateList(w, r)
+	//	rm.bus.SendCommand("update-list-command", payload, reqID)
 
 	//case "delete-list":
-	//	rm.DeleteList(w, r)
-
-	//case "get-all-lists":
-	//	rm.GetAllLists(w, r)
+	//	rm.bus.SendCommand("delete-list-command", payload, reqID)
 
 	default:
 		err := fmt.Errorf("command '%s' not found", commandName)
 		rm.Error(err, w)
 	}
+
+	if err != nil {
+		rm.Log().Errorf("Dispatch command error: %w", err)
+	}
 }
 
+// CreateList is a WIP: Only for now the request manager is responsible of
+// executing commands received from the bus.
 func (rm *RequestManager) CreateList(w http.ResponseWriter, r *http.Request) {
 	name := "create-list"
 
