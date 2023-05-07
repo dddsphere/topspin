@@ -91,7 +91,7 @@ func NewPath() string {
 	return "/new"
 }
 
-// ShowPath returns list path under resource root path.
+// ShowPath returns show path under resource root path.
 func ShowPath() string {
 	return "/{id}"
 }
