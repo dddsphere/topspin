@@ -18,15 +18,17 @@ type (
 )
 
 func (c *Client) retryConnection() (r chan retry) {
+	max := c.config.GetUint64("max-retries")
+
 	r = make(chan retry)
-	bo := backoff.WithMaxRetries(backoff.NewExponentialBackOff(), c.config.MaxRetries)
+	bo := backoff.WithMaxRetries(backoff.NewExponentialBackOff(), max)
 
 	go func() {
 		defer close(r)
 
 		url := c.URL()
 
-		for i := 0; i <= int(c.config.MaxRetries); i++ {
+		for i := 0; i <= int(max); i++ {
 			c.Log().Infof("dialing to mongo at %s", url)
 
 			opts := options.Client().ApplyURI(url)
