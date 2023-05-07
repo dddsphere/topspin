@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
@@ -22,21 +23,20 @@ var (
 
 type (
 	Config struct {
-		*SimpleWorker
 		appName        string
 		v              *viper.Viper
 		file           string
 		k8s            bool
 		onConfigChange func(e fsnotify.Event)
+		status         map[time.Time]string
 	}
 )
 
-func NewConfig(appName string, log Logger) *Config {
+func NewConfig(appName string) *Config {
 	return &Config{
-		SimpleWorker: NewWorker(configName(appName), log),
-		appName:      appName,
-		v:            viper.New(),
-		k8s:          false,
+		appName: appName,
+		v:       viper.New(),
+		k8s:     false,
 	}
 }
 
@@ -59,10 +59,9 @@ func (cfg *Config) loadConfig() (updated *Config, err error) {
 	cfg.v.SetTypeByDefaultValue(true)
 	cfg.v.SetConfigFile(cfg.file)
 
-	cfg.Log().Debugf("Reading configuration from file: %s", cfg.file)
 	err = cfg.v.ReadInConfig()
 	if _, ok := err.(*os.PathError); ok {
-		cfg.Log().Infof("No config file at '%s', using default values")
+		cfg.addStatus(fmt.Sprintf("mo config file at '%s', using default values", cfg.file))
 
 	} else if err != nil {
 		return cfg, fmt.Errorf("error reading config: %w", err)
@@ -87,12 +86,11 @@ func (cfg *Config) loadK8sConfig() (updated *Config, err error) {
 		return cfg, err
 	}
 
-	cfg.Log().Debugf("Reading configuration from k8s config map", cfg.file)
 	cfg.v.SetConfigFile(path)
 
 	err = cfg.v.ReadInConfig()
 	if _, ok := err.(*os.PathError); ok {
-		cfg.Log().Infof("No config file at '%s', using default values")
+		cfg.addStatus(fmt.Sprintf("mo config file at '%s', using default values", cfg.file))
 
 	} else if err != nil {
 		return cfg, fmt.Errorf("error reading config: %w", err)
@@ -123,10 +121,17 @@ func (cfg *Config) SetOnConfigChange(onConfigChangeFunc func(e fsnotify.Event)) 
 	cfg.onConfigChange = onConfigChangeFunc
 }
 
-func (cfg *Config) List() {
+func (cfg *Config) List() string {
+	var sb strings.Builder
 	for k, v := range cfg.v.AllSettings() {
-		cfg.Log().Debugf("%s: %v\n", k, v)
+		entry := fmt.Sprintf("%s: %v\n", k, v)
+		sb.WriteString(entry)
 	}
+	return sb.String()
+}
+
+func (cfg *Config) addStatus(message string) {
+	cfg.status[time.Now()] = message
 }
 
 func configName(appName string) string {
@@ -135,6 +140,6 @@ func configName(appName string) string {
 
 func (cfg *Config) defaultOnConfigChangeFunc() func(e fsnotify.Event) {
 	return func(e fsnotify.Event) {
-		cfg.Log().Infof("Config file updated: %s", e.Name)
+		cfg.addStatus(fmt.Sprintf("Config file updated: %s", e.Name))
 	}
 }
