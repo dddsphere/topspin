@@ -33,7 +33,7 @@ func main() {
 	cfg := a.LoadConfig()
 
 	// WIP: Verifying new configuration mechanism
-	config := topspin.NewConfig(name, log)
+	config := topspin.NewConfig(name)
 	_, err := config.Load()
 	if err != nil {
 		log.Fatal(err)
