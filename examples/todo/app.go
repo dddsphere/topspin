@@ -136,7 +136,7 @@ func (app *App) AddQuery(query topspin.Query) {
 	app.CQRS.AddQuery(query)
 }
 
-func (app *App) LoadConfig() config.Config {
+func (app *App) LoadConfig() *config.Config {
 	if app.Cfg == nil {
 		app.Cfg = &config.Config{}
 	}
@@ -160,5 +160,5 @@ func (app *App) LoadConfig() config.Config {
 
 	app.Cfg = &cfg
 
-	return cfg
+	return &cfg
 }

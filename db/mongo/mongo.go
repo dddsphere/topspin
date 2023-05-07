@@ -1,4 +1,4 @@
-// package mongo provides a lightweight wrapper over the official Mongo client
+// Package mongo provides a lightweight wrapper over the official Mongo client
 // featuring support for exponential backoff connection retries and implementation
 // of the topspin.Service interface.
 package mongo
@@ -15,21 +15,12 @@ type (
 	Client struct {
 		topspin.Service
 		*mongo.Client
-		config Config
-	}
-
-	Config struct {
-		Host       string
-		Port       int
-		User       string
-		Pass       string
-		Database   string
-		MaxRetries uint64
+		config *topspin.Config
 	}
 )
 
-// NewMongoClient
-func NewMongoClient(name string, cfg Config, log topspin.Logger) *Client {
+// NewMongoClient returns a new Mongo client.
+func NewMongoClient(name string, cfg *topspin.Config, log topspin.Logger) *Client {
 	return &Client{
 		Service: topspin.NewSimpleService(name, log),
 		config:  cfg,
@@ -73,11 +64,15 @@ func (c *Client) connect() error {
 }
 
 func (c *Client) URL() string {
-	cfg := c.config
-	return fmt.Sprintf("mongodb://%s:%s@%s:%d/auth?authSource=admin", cfg.User,
-		cfg.Pass, cfg.Host, cfg.Port)
+	user := c.config.GetString("user")
+	pass := c.config.GetString("pass")
+	host := c.config.GetString("host")
+	port := c.config.GetInt("port")
+
+	return fmt.Sprintf("mongodb://%s:%s@%s:%d/auth?authSource=admin", user,
+		pass, host, port)
 }
 
 func (c *Client) Db() string {
-	return c.config.Database
+	return c.config.GetString("database")
 }
