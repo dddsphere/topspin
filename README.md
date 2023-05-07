@@ -1,3 +1,4 @@
+# TopSpin
 TopSpin is a library for building microservices and micromonoliths in Go based on Domain Driven Design (DDD) practices.
 
 The true advantage of this approach may not be immediately apparent in small service projects or those that do not require long-term maintenance or extension, but it notably simplifies the addition of new business features on a consistent basis. Furthermore, since the implementation is defined using real business terms (ubiquitous language), it is not bound to a REST model, making code navigation and discovery more natural.
@@ -9,3 +10,11 @@ For use cases in which the entire service or parts of it do not benefit from the
 Notice that a REST adapter still make use of the commands and queries. However, now GET and POST requests will be sufficient, and the only meaningful information in the URL will be the name of the command to be executed or a suitable alias-command mapping. Moreover, the API documentation (OpenAPI) becomes more humanly understandable [TODO: show an example], especially for people with less technical background. The latter in the context of API manual testing can be very convenient.
 
 Some of the advantages of using this library include simplified testing since we are isolated from infrastructure issues (e.g., HTTP, gRPC, etc.), and it is possible to manually send queries and commands from the console if required. This is trivial to achieve since it is easy to create a CLI adapter that operates on the elements of the bounded context. Such a feature can be particularly useful during the development stage.
+
+## TODO
+
+- Define and consolidate the project structure and components before creating tests.
+- Create corresponding tests to ensure reliability and functionality of the project.
+- Continuously update tests as the project progresses.
+
+Note: We will focus on consolidating the project structure and components before creating tests to ensure that the tests accurately reflect the intended functionality of the project. This means that testing may be limited in the initial stages of development but will be expanded and updated as the project progresses.
