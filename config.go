@@ -60,7 +60,7 @@ func (cfg *Config) load() (updated *Config, err error) {
 
 	err = cfg.v.ReadInConfig()
 	if _, ok := err.(*os.PathError); ok {
-		cfg.addStatus(fmt.Sprintf("mo config file at '%s', using default values", cfg.file))
+		cfg.addStatus(fmt.Sprintf("no config file at '%s', using default values", cfg.file))
 
 	} else if err != nil {
 		return cfg, fmt.Errorf("error reading config: %w", err)
