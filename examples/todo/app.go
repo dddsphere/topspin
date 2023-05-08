@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"github.com/dddsphere/topspin"
-	rest2 "github.com/dddsphere/topspin/examples/todo/internal/adapterpri/rest"
+	"github.com/dddsphere/topspin/examples/todo/internal/adapterpri/rest"
 	"github.com/dddsphere/topspin/examples/todo/internal/config"
 	"github.com/dddsphere/topspin/examples/todo/internal/cqrs/bus/nats"
 	"github.com/dddsphere/topspin/examples/todo/internal/cqrs/command"
@@ -30,7 +30,7 @@ type (
 		// NATS
 		Bus *nats.BusManager
 
-		RESTServer *rest2.Server
+		RESTServer *rest.Server
 		//WebServer     *web.Server
 		//GRPCServer    *grpc.Server
 	}
@@ -60,8 +60,9 @@ func (app *App) Init() (err error) {
 
 	// Router
 	if app.RESTServer != nil {
-		rm := rest2.NewRequestManager(app.CQRS, app.Bus, app.Log())
+		rm := rest.NewRequestManager(app.CQRS, app.Bus, app.Log())
 		h := openapi.Handler(rm)
+
 		app.RESTServer.InitRESTRouter(h)
 	}
 
@@ -148,7 +149,7 @@ func (app *App) LoadConfig() *config.Config {
 
 	// Mongo
 	flag.StringVar(&cfg.Mongo.Host, "mongo-host", "localhost", "Mongo host")
-	flag.IntVar(&cfg.Mongo.Port, "mongo-port", 8081, "Mongo port")
+	flag.IntVar(&cfg.Mongo.Port, "mongo-port", 27017, "Mongo port")
 	flag.StringVar(&cfg.Mongo.User, "mongo-user", "", "Mongo user")
 	flag.StringVar(&cfg.Mongo.Pass, "mongo-pass", "", "Mongo pass")
 	flag.StringVar(&cfg.Mongo.Database, "mongo-database", "", "Mongo database")
