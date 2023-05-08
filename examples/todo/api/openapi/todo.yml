@@ -35,7 +35,6 @@ paths:
                 - $ref: '#/components/schemas/CreateList'
       #               - $ref: '#/components/schemas/UpdateLists'
       #               - $ref: '#/components/schemas/DeleteLists'
-      #               - $ref: '#/components/schemas/GetAllLists'
       responses:
         '204':
           description: todo
