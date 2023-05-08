@@ -37,7 +37,7 @@ func (rm *RequestManager) Dispatch(w http.ResponseWriter, r *http.Request, comma
 	reqID := genReqID(r)
 
 	// WIP: Sending gob data for now
-	// TODO: Command should validate payload
+	// TODO: Command should do a basic validation of the payload
 	// before enqueuing.
 	payload, err := body(r)
 	if err != nil {
@@ -45,8 +45,10 @@ func (rm *RequestManager) Dispatch(w http.ResponseWriter, r *http.Request, comma
 		rm.Error(err, w)
 	}
 
+	rm.Log().Debug("1")
 	switch commandName {
 	case "create-list":
+		rm.Log().Debug("2")
 		err = rm.bus.SendCommand("create-list-command", payload, reqID)
 
 	//case "update-list":
@@ -56,16 +58,25 @@ func (rm *RequestManager) Dispatch(w http.ResponseWriter, r *http.Request, comma
 	//	rm.bus.SendCommand("delete-list-command", payload, reqID)
 
 	default:
+		rm.Log().Debug("3")
 		err := fmt.Errorf("command '%s' not found", commandName)
 		rm.Error(err, w)
 	}
 
 	if err != nil {
+		rm.Log().Debug("4")
+		rm.Log().Errorf("Dispatch command error: %w", err)
+	}
+
+	w.WriteHeader(http.StatusAccepted)
+	_, err = w.Write([]byte("202 - Temporary OK message"))
+	if err != nil {
+		rm.Log().Debug("5")
 		rm.Log().Errorf("Dispatch command error: %w", err)
 	}
 }
 
-// CreateList is a WIP: Only for now the request manager is responsible of
+// CreateList is a WIP: Only for now the request manager is responsible for
 // executing commands received from the bus.
 func (rm *RequestManager) CreateList(w http.ResponseWriter, r *http.Request) {
 	name := "create-list"

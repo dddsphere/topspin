@@ -107,5 +107,4 @@ func (c *Client) Subscribe(subject string) {
 	c.Log().Infof("Listening on '%s' subject", subject)
 
 	runtime.Goexit()
-
 }
