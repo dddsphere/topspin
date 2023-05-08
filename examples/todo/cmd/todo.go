@@ -10,7 +10,7 @@ import (
 	db "github.com/dddsphere/topspin/db/mongo"
 	"github.com/dddsphere/topspin/examples/todo"
 	"github.com/dddsphere/topspin/examples/todo/internal/adapterpri/rest"
-	nats2 "github.com/dddsphere/topspin/examples/todo/internal/cqrs/bus/nats"
+	"github.com/dddsphere/topspin/examples/todo/internal/cqrs/bus/nats"
 	"github.com/dddsphere/topspin/examples/todo/internal/repo/mongo"
 	"github.com/dddsphere/topspin/examples/todo/internal/service"
 )
@@ -40,7 +40,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Debug(cfg.List())
 
 	// Context
 	ctx, cancel := context.WithCancel(context.Background())
@@ -51,7 +50,6 @@ func main() {
 
 	// Repos
 	lrr := mongo.NewListRead("list-read-repo", mgo, config, log)
-
 	lwr := mongo.NewListWrite("list-write-repo", mgo, config, log)
 
 	// Services
@@ -66,9 +64,9 @@ func main() {
 	a.RESTServer = rest.NewServer("rest-server", config, log)
 
 	// Bus
-	nc := nats2.NewClient("nats-client", config, log)
+	nc := nats.NewClient("nats-client", config, log)
 
-	a.Bus = nats2.NewBusManager("nats-bus", config, nc, log)
+	a.Bus = nats.NewBusManager("nats-bus", config, nc, log)
 
 	// Init & Start
 	err = a.InitAndStart()

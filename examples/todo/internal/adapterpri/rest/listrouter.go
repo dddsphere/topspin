@@ -7,8 +7,8 @@ import (
 )
 
 func (server *Server) InitRESTRouter(h http.Handler) {
-	r := topspin.NewRouter("rest-router", server.Log())
-	r.Mount("/api/v1", h)
+	rr := topspin.NewRouter("rest-router", server.Log())
+	rr.Mount("/api/v1", h)
 
-	server.SetRouter(r)
+	server.SetRouter(rr)
 }
