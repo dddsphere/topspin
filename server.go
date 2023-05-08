@@ -65,7 +65,7 @@ func (srv *Server) Start(port int) (err error) {
 
 	srv.Log().Infof("Server %s initializing at port %s", srv.Name(), p)
 
-	err = http.ListenAndServe(p, srv.router)
+	err = http.ListenAndServe(":8081", srv.router)
 
 	return err
 }
