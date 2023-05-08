@@ -16,8 +16,8 @@ create-list-command:
 
 .PHONY: openapihttp
 openapihttp:
-	oapi-codegen -generate types -o examples/todo/internal/app/ports/openapi/todotypes.go -package openapi examples/todo/api/openapi/todo.yml
-	oapi-codegen -generate chi-server -o examples/todo/internal/app/ports/openapi/todoapi.go -package openapi examples/todo/api/openapi/todo.yml
+	oapi-codegen -generate types -o examples/todo/internal/ports/openapi/todotypes.go -package openapi examples/todo/api/openapi/todo.yml
+	oapi-codegen -generate chi-server -o examples/todo/internal/ports/openapi/todoapi.go -package openapi examples/todo/api/openapi/todo.yml
 	oapi-codegen -generate types -o examples/todo/internal/client/ports/openapi/todotypes.go -package openapi examples/todo/api/openapi/todo.yml
 	oapi-codegen -generate client -o examples/todo/internal/client/ports/openapi/todoapi.go -package openapi examples/todo/api/openapi/todo.yml
 
