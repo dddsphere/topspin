@@ -9,7 +9,6 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/dddsphere/topspin"
-	"github.com/dddsphere/topspin/examples/todo/internal/config"
 	core2 "github.com/dddsphere/topspin/examples/todo/internal/domain"
 	"github.com/dddsphere/topspin/examples/todo/internal/repo"
 )
@@ -17,7 +16,7 @@ import (
 type (
 	Todo struct {
 		*topspin.SimpleWorker
-		config      *config.Config
+		config      *topspin.Config
 		cqrs        *topspin.CQRSManager
 		repoRead    repo.ListRead
 		repoWrite   repo.ListWrite
@@ -25,7 +24,7 @@ type (
 	}
 )
 
-func NewTodo(name string, rr repo.ListRead, rw repo.ListWrite, cfg *config.Config, log topspin.Logger) (Todo, error) {
+func NewTodo(name string, rr repo.ListRead, rw repo.ListWrite, cfg *topspin.Config, log topspin.Logger) (Todo, error) {
 	var svc Todo
 
 	if rr == nil {

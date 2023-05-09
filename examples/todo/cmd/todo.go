@@ -30,13 +30,7 @@ func main() {
 
 	// App
 	a := todo.NewApp(name, version, log)
-	// WIP: This old configuration will be removed
-	// after new implementation is completed.
-	config := a.LoadConfig()
-
-	// WIP: Verifying new configuration mechanism
-	cfg := topspin.NewConfig(name)
-	_, err := cfg.Load()
+	cfg, err := a.LoadConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -49,11 +43,11 @@ func main() {
 	mgo := db.NewMongoClient("mongo-client", cfg.Sub("mongo"), log)
 
 	// Repos
-	lrr := mongo.NewListRead("list-read-repo", mgo, config, log)
-	lwr := mongo.NewListWrite("list-write-repo", mgo, config, log)
+	lrr := mongo.NewListRead("list-read-repo", mgo, cfg, log)
+	lwr := mongo.NewListWrite("list-write-repo", mgo, cfg, log)
 
 	// Services
-	ts, err := service.NewTodo("todo-app-service", lrr, lwr, config, log)
+	ts, err := service.NewTodo("todo-app-service", lrr, lwr, cfg, log)
 	if err != nil {
 		exit(err)
 	}
@@ -61,12 +55,12 @@ func main() {
 	a.TodoService = &ts
 
 	// Server
-	a.RESTServer = rest.NewServer("rest-server", config, log)
+	a.RESTServer = rest.NewServer("rest-server", cfg, log)
 
 	// Bus
-	nc := nats.NewClient("nats-client", config, log)
+	nc := nats.NewClient("nats-client", cfg, log)
 
-	a.Bus = nats.NewBusManager("nats-bus", config, nc, log)
+	a.Bus = nats.NewBusManager("nats-bus", cfg, nc, log)
 
 	// Init & Start
 	err = a.InitAndStart()
