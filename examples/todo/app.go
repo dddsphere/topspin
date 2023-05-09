@@ -1,13 +1,11 @@
 package todo
 
 import (
-	"flag"
 	"fmt"
 	"sync"
 
 	"github.com/dddsphere/topspin"
 	"github.com/dddsphere/topspin/examples/todo/internal/adapterpri/rest"
-	"github.com/dddsphere/topspin/examples/todo/internal/config"
 	"github.com/dddsphere/topspin/examples/todo/internal/cqrs/bus/nats"
 	"github.com/dddsphere/topspin/examples/todo/internal/cqrs/command"
 	"github.com/dddsphere/topspin/examples/todo/internal/ports/openapi"
@@ -18,7 +16,7 @@ type (
 	// App description
 	App struct {
 		*topspin.App
-		Cfg *config.Config
+		Cfg *topspin.Config
 
 		// Service
 		TodoService *service.Todo
@@ -42,6 +40,11 @@ type (
 	}
 )
 
+const (
+	cfgLoggingLevel = "logging.level"
+	cfgJSONAPIPort  = "server.json-api-port"
+)
+
 func NewApp(name, version string, log topspin.Logger) *App {
 	return &App{
 		App:  topspin.NewApp(name, version, log),
@@ -50,7 +53,7 @@ func NewApp(name, version string, log topspin.Logger) *App {
 }
 
 func (app *App) SetLogLevel(level string) {
-	app.Log().SetLevel(app.Cfg.Level)
+	app.Log().SetLevel(app.Cfg.GetString(cfgLoggingLevel))
 }
 
 // Init app
@@ -77,7 +80,8 @@ func (app *App) Start() error {
 
 	wg.Add(1)
 	go func() {
-		errREST = app.RESTServer.Start(app.Cfg.Server.JSONAPIPort)
+		port := app.Cfg.GetInt(cfgJSONAPIPort)
+		errREST = app.RESTServer.Start(port)
 		wg.Done()
 	}()
 
@@ -137,29 +141,8 @@ func (app *App) AddQuery(query topspin.Query) {
 	app.CQRS.AddQuery(query)
 }
 
-func (app *App) LoadConfig() *config.Config {
-	if app.Cfg == nil {
-		app.Cfg = &config.Config{}
-	}
+func (app *App) LoadConfig() (cfg *topspin.Config, err error) {
+	app.Cfg = topspin.NewConfig(app.Name())
+	return app.Cfg.Load()
 
-	cfg := config.Config{}
-
-	// Server
-	flag.IntVar(&cfg.Server.JSONAPIPort, "json-api-port", 8081, "JSON API server port")
-
-	// Mongo
-	flag.StringVar(&cfg.Mongo.Host, "mongo-host", "localhost", "Mongo host")
-	flag.IntVar(&cfg.Mongo.Port, "mongo-port", 27017, "Mongo port")
-	flag.StringVar(&cfg.Mongo.User, "mongo-user", "", "Mongo user")
-	flag.StringVar(&cfg.Mongo.Pass, "mongo-pass", "", "Mongo pass")
-	flag.StringVar(&cfg.Mongo.Database, "mongo-database", "", "Mongo database")
-	flag.IntVar(&cfg.Mongo.MaxRetries, "mongo-max-reties", 10, "Mongo port")
-
-	// NATS
-	flag.StringVar(&cfg.NATS.Host, "nats-host", "0.0.0.0", "NATS host")
-	flag.IntVar(&cfg.NATS.Port, "nats-port", 4222, "NATS port")
-
-	app.Cfg = &cfg
-
-	return &cfg
 }
