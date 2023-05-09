@@ -9,7 +9,7 @@ test:
 	go test ./... -v
 
 run:
-	go run examples/todo/cmd/todo.go --configfile=examples/todo/internal/configs/config.yml
+	go run examples/todo/cmd/todo.go --config-file=examples/todo/configs/config.yml
 
 create-list-command:
 	curl --location 'http://localhost:8081/api/v1/cmd/create-list' \

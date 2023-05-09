@@ -37,7 +37,7 @@ type (
 )
 
 func init() {
-	flag.StringVar(&fileFlag, "config-file", defaultFilePathDev, "path to configuration file")
+	flag.StringVar(&fileFlag, "config-file", defaultFilePath, "path to configuration file")
 	flag.BoolVar(&searchFlag, "config-search", false, "search for settings in common config places")
 }
 
@@ -53,6 +53,8 @@ func NewConfig(name string) *Config {
 func (cfg *Config) Load(file ...string) (updated *Config, err error) {
 	if len(file) == 0 {
 		flag.Parse()
+		cfg.file = fileFlag
+		cfg.search = searchFlag
 	} else {
 		cfg.file = file[0]
 		cfg.search = false
@@ -100,8 +102,8 @@ func (cfg *Config) cleanInput() {
 func (cfg *Config) updateLookupPaths() {
 	file, _, noParent := cfg.baseAndPath()
 
-	if file == "" {
-		file = defaultFilePath
+	if file == "" || file == "." {
+		file = defaultFilePathDev
 	}
 
 	cfg.v.SetConfigType("yaml")
