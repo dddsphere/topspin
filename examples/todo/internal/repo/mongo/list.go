@@ -8,7 +8,6 @@ import (
 
 	"github.com/dddsphere/topspin"
 	db "github.com/dddsphere/topspin/db/mongo"
-	"github.com/dddsphere/topspin/examples/todo/internal/config"
 	"github.com/dddsphere/topspin/examples/todo/internal/domain"
 )
 
@@ -24,13 +23,13 @@ type (
 
 const listColl = "list"
 
-func NewListRead(name string, conn *db.Client, cfg *config.Config, log topspin.Logger) *ListRead {
+func NewListRead(name string, conn *db.Client, cfg *topspin.Config, log topspin.Logger) *ListRead {
 	return &ListRead{
 		Repo: NewRepo(name, conn, listColl, cfg, log),
 	}
 }
 
-func NewListWrite(name string, conn *db.Client, cfg *config.Config, log topspin.Logger) *ListWrite {
+func NewListWrite(name string, conn *db.Client, cfg *topspin.Config, log topspin.Logger) *ListWrite {
 	return &ListWrite{
 		Repo: NewRepo(name, conn, listColl, cfg, log),
 	}

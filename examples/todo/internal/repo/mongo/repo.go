@@ -1,4 +1,4 @@
-// package mongo provides a Mongo based implementation of UserRepo interface
+// Package mongo provides a Mongo based implementation of UserRepo interface
 package mongo
 
 import (
@@ -8,19 +8,18 @@ import (
 
 	"github.com/dddsphere/topspin"
 	db "github.com/dddsphere/topspin/db/mongo"
-	"github.com/dddsphere/topspin/examples/todo/internal/config"
 )
 
 type (
 	Repo struct {
 		*topspin.SimpleWorker
-		config     *config.Config
+		config     *topspin.Config
 		conn       *db.Client
 		collection string
 	}
 )
 
-func NewRepo(name string, conn *db.Client, collection string, cfg *config.Config, log topspin.Logger) *Repo {
+func NewRepo(name string, conn *db.Client, collection string, cfg *topspin.Config, log topspin.Logger) *Repo {
 	return &Repo{
 		SimpleWorker: topspin.NewWorker(name, log),
 		config:       cfg,
