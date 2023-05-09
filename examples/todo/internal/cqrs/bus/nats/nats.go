@@ -9,13 +9,17 @@ import (
 	"github.com/nats-io/nats.go"
 
 	"github.com/dddsphere/topspin"
-	"github.com/dddsphere/topspin/examples/todo/internal/config"
+)
+
+const (
+	cfgHostKey = "nats.host"
+	cfgPortKey = "nats.port"
 )
 
 type (
 	Client struct {
 		*topspin.SimpleWorker
-		config *config.Config
+		config *topspin.Config
 		conn   *nats.Conn
 	}
 )
@@ -25,7 +29,7 @@ const (
 	defaultPort = 4222
 )
 
-func NewClient(name string, cfg *config.Config, log topspin.Logger) *Client {
+func NewClient(name string, cfg *topspin.Config, log topspin.Logger) *Client {
 	return &Client{
 		SimpleWorker: topspin.NewWorker(name, log),
 		config:       cfg,
@@ -51,12 +55,12 @@ func (c *Client) Start() error {
 
 func (c *Client) address() (address string) {
 	host := defaultHost
-	if c.config.NATS.Host == "" {
-		host = c.config.NATS.Host
+	if c.config.GetString(cfgHostKey) == "" {
+		host = c.config.GetString(cfgHostKey)
 	}
 
 	port := defaultPort
-	if c.config.NATS.Port == 0 {
+	if c.config.GetInt(cfgPortKey) == 0 {
 		port = defaultPort
 	}
 
