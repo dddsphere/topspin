@@ -17,38 +17,59 @@ var (
 )
 
 var (
+	fileFlag   string
+	searchFlag bool
+)
+
+var (
 	defaultFilePath    = "config.yml"
 	defaultFilePathDev = filepath.FromSlash("configs/config.yml")
 )
 
 type (
 	Config struct {
-		name           string
-		v              *viper.Viper
-		file           string
-		search         bool
-		onConfigChange func(e fsnotify.Event)
-		status         map[time.Time]string
+		name   string
+		v      *viper.Viper
+		file   string
+		search bool
+		status map[time.Time]string
 	}
 )
+
+func init() {
+	flag.StringVar(&fileFlag, "config-file", defaultFilePathDev, "path to configuration file")
+	flag.BoolVar(&searchFlag, "config-search", false, "search for settings in common config places")
+}
 
 func NewConfig(name string) *Config {
 	return &Config{
 		name:   name,
 		v:      viper.New(),
 		search: false,
+		status: map[time.Time]string{},
 	}
 }
 
-func (cfg *Config) Load() (updated *Config, err error) {
-	flag.StringVar(&cfg.file, "config-file", defaultFilePathDev, "path to configuration file")
-	flag.BoolVar(&cfg.search, "config-search", false, "search for settings in common config places")
-	flag.Parse()
+func (cfg *Config) Load(file ...string) (updated *Config, err error) {
+	if len(file) == 0 {
+		flag.Parse()
+	} else {
+		cfg.file = file[0]
+		cfg.search = false
+	}
 
 	cfg.cleanInput()
 	cfg.updateLookupPaths()
 
 	return cfg.load()
+}
+
+func (cfg *Config) File() string {
+	return cfg.file
+}
+
+func (cfg *Config) SetFile(file string) {
+	cfg.file = file
 }
 
 func (cfg *Config) load() (updated *Config, err error) {
@@ -66,8 +87,8 @@ func (cfg *Config) load() (updated *Config, err error) {
 		return cfg, fmt.Errorf("error reading config: %w", err)
 	}
 
-	cfg.v.WatchConfig()
 	cfg.v.OnConfigChange(cfg.defaultOnConfigChangeFunc())
+	cfg.v.WatchConfig()
 
 	return cfg, nil
 }
@@ -102,7 +123,7 @@ func (cfg *Config) baseAndPath() (base, dir string, current bool) {
 }
 
 func (cfg *Config) SetOnConfigChange(onConfigChangeFunc func(e fsnotify.Event)) {
-	cfg.onConfigChange = onConfigChangeFunc
+	cfg.v.OnConfigChange(onConfigChangeFunc)
 }
 
 func (cfg *Config) Sub(branch string) *Config {
