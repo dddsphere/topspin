@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/dddsphere/topspin"
-	"github.com/dddsphere/topspin/examples/todo/internal/config"
 )
 
 const (
@@ -20,12 +19,12 @@ type (
 	// BusManager is an implementation of bus.Manager built on top of NATS.
 	BusManager struct {
 		*topspin.SimpleWorker
-		config *config.Config
+		config *topspin.Config
 		nats   *Client
 	}
 )
 
-func NewBusManager(name string, cfg *config.Config, nats *Client, log topspin.Logger) *BusManager {
+func NewBusManager(name string, cfg *topspin.Config, nats *Client, log topspin.Logger) *BusManager {
 	return &BusManager{
 		SimpleWorker: topspin.NewWorker(name, log),
 		config:       cfg,
