@@ -14,6 +14,7 @@ type (
 		name    string
 		version string
 
+		cfg *Config
 		log Logger
 
 		cancel context.CancelFunc
@@ -26,6 +27,7 @@ func NewApp(name, version string, log Logger) *App {
 	return &App{
 		name:    name,
 		version: version,
+		cfg:     NewConfig(name),
 		log:     log,
 	}
 }
@@ -36,6 +38,14 @@ func (app *App) Name() string {
 
 func (app *App) Version() string {
 	return app.version
+}
+
+func (app *App) Cfg() *Config {
+	return app.cfg
+}
+
+func (app *App) SetCfg(cfg *Config) {
+	app.cfg = cfg
 }
 
 func (app *App) Log() Logger {

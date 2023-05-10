@@ -6,6 +6,7 @@ import (
 
 	"github.com/dddsphere/topspin"
 	"github.com/dddsphere/topspin/examples/todo/internal/adapterpri/rest"
+	"github.com/dddsphere/topspin/examples/todo/internal/cqrs"
 	"github.com/dddsphere/topspin/examples/todo/internal/cqrs/bus/nats"
 	"github.com/dddsphere/topspin/examples/todo/internal/cqrs/command"
 	"github.com/dddsphere/topspin/examples/todo/internal/ports/openapi"
@@ -16,17 +17,17 @@ type (
 	// App description
 	App struct {
 		*topspin.App
-		Cfg *topspin.Config
 
 		// Service
 		TodoService *service.Todo
 
 		// CQRS
-		CQRS *topspin.CQRSManager
+		CQRS *cqrs.Manager
 
 		// Bus
 		// NATS
-		Bus *nats.BusManager
+		NATS *nats.Client
+		Bus  *nats.BusManager
 
 		RESTServer *rest.Server
 		//WebServer     *web.Server
@@ -42,18 +43,18 @@ type (
 
 const (
 	cfgLoggingLevel = "logging.level"
-	cfgJSONAPIPort  = "server.json-api-port"
+	cfgJSONAPIPort  = "config.server.json-api-port"
 )
 
 func NewApp(name, version string, log topspin.Logger) *App {
 	return &App{
 		App:  topspin.NewApp(name, version, log),
-		CQRS: topspin.NewCQRSManager(),
+		CQRS: cqrs.NewManager(log),
 	}
 }
 
 func (app *App) SetLogLevel(level string) {
-	app.Log().SetLevel(app.Cfg.GetString(cfgLoggingLevel))
+	app.Log().SetLevel(app.Cfg().GetString(cfgLoggingLevel))
 }
 
 // Init app
@@ -80,7 +81,7 @@ func (app *App) Start() error {
 
 	wg.Add(1)
 	go func() {
-		port := app.Cfg.GetInt(cfgJSONAPIPort)
+		port := app.Cfg().GetInt(cfgJSONAPIPort)
 		errREST = app.RESTServer.Start(port)
 		wg.Done()
 	}()
@@ -124,7 +125,7 @@ func (app *App) Stop() {
 
 func (app *App) initCommands() {
 	log := app.Log()
-	app.AddCommand(&topspin.SampleCommand) // TODO: Remove
+	//app.AddCommand(&topspin.SampleCommand) // TODO: Remove
 	app.AddCommand(command.NewCreateListCommand(app.TodoService, log))
 	//app.AddCommand(command.NewAddItemCommand(app.TodoService))
 	//app.AddCommand(command.NewGetItemCommand(app.TodoService))
@@ -142,7 +143,11 @@ func (app *App) AddQuery(query topspin.Query) {
 }
 
 func (app *App) LoadConfig() (cfg *topspin.Config, err error) {
-	app.Cfg = topspin.NewConfig(app.Name())
-	return app.Cfg.Load()
+	return app.Cfg().Load()
+}
 
+func (app *App) EnableBus() {
+	app.NATS = nats.NewClient("nats-client", app.Cfg(), app.Log())
+	app.CQRS = cqrs.NewManager(app.Log())
+	app.Bus = nats.NewBusManager("nats-bus", app.Cfg(), app.NATS, app.CQRS, app.Log())
 }

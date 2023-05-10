@@ -1,8 +1,6 @@
 package nats
 
 import (
-	"bytes"
-	"encoding/gob"
 	"fmt"
 	"runtime"
 
@@ -45,11 +43,6 @@ func (c *Client) Start() error {
 		return fmt.Errorf("nats connection cannot be established: %w", err)
 	}
 
-	// Subscriptions
-	// WIP: Not a client responsibility,
-	// Move this up, just only to verify subscriptions are working.
-	c.Subscribe(commandSubject)
-
 	return nil
 }
 
@@ -77,23 +70,11 @@ func (c *Client) PublishEvent(subject string, commandEvent []byte) error {
 	return nil
 }
 
-func (c *Client) Subscribe(subject string) {
+func (c *Client) Subscribe(subject string, handler nats.MsgHandler) {
 	c.Log().Infof("NATS subscribed through: %s", c.conn.ConnectedAddr())
 
 	var err error
-	_, err = c.conn.Subscribe(subject, func(m *nats.Msg) {
-		buf := bytes.NewBuffer(m.Data)
-		dec := gob.NewDecoder(buf)
-
-		ce := CommandEvent{}
-		err := dec.Decode(&ce)
-		if err != nil {
-			c.Log().Errorf("Cannot decode command event: %s", err.Error())
-		}
-
-		c.Log().Infof("Received a command event with ID: %s", ce.TracingID)
-	})
-
+	_, err = c.conn.Subscribe(subject, handler)
 	if err != nil {
 		c.Log().Errorf("NATS command subscription error: %s", err.Error())
 	}

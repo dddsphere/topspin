@@ -11,6 +11,7 @@ import (
 
 type (
 	CreateListCommandData struct {
+		UserID      string
 		Name        string
 		Description string
 	}
@@ -34,8 +35,8 @@ func NewCreateListCommand(todoService *service.Todo, log topspin.Logger) *Create
 	}
 }
 
-func (c *CreateListCommand) Name() string {
-	return c.BaseCommand.Name()
+func (cmd CreateListCommand) Name() string {
+	return cmd.BaseCommand.Name()
 }
 
 func (c *CreateListCommand) HandleFunc() (f func(ctx context.Context, data interface{}) error) {
