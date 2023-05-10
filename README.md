@@ -11,6 +11,8 @@ Notice that a REST adapter still make use of the commands and queries. However, 
 
 Some of the advantages of using this library include simplified testing since we are isolated from infrastructure issues (e.g., HTTP, gRPC, etc.), and it is possible to manually send queries and commands from the console if required. This is trivial to achieve since it is easy to create a CLI adapter that operates on the elements of the bounded context. Such a feature can be particularly useful during the development stage.
 
+In a future and more refined version of this package, incorporating the functionality for a microservice would require little additional effort beyond including the business rules linked to each event that the service manages. The upcoming generator would construct a skeleton for each of these commands and queries, which the developer will complete with the corresponding business logic. In short, each system event will have an implementation of its business logic in its own file (i.e. `commands/dosomething.go`)
+
 ## TODO
 
 - Define and consolidate the project structure and components before creating tests.

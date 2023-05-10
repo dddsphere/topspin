@@ -10,7 +10,6 @@ import (
 	db "github.com/dddsphere/topspin/db/mongo"
 	"github.com/dddsphere/topspin/examples/todo"
 	"github.com/dddsphere/topspin/examples/todo/internal/adapterpri/rest"
-	"github.com/dddsphere/topspin/examples/todo/internal/cqrs/bus/nats"
 	"github.com/dddsphere/topspin/examples/todo/internal/repo/mongo"
 	"github.com/dddsphere/topspin/examples/todo/internal/service"
 )
@@ -58,9 +57,7 @@ func main() {
 	a.RESTServer = rest.NewServer("rest-server", cfg, log)
 
 	// Bus
-	nc := nats.NewClient("nats-client", cfg, log)
-
-	a.Bus = nats.NewBusManager("nats-bus", cfg, nc, log)
+	a.EnableBus()
 
 	// Init & Start
 	err = a.InitAndStart()

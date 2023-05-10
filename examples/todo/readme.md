@@ -32,7 +32,7 @@ go run cmd/todo.go
 curl --location --request POST 'http://localhost:8081/api/v1/cmd/create-list' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-  "userUUID": "e014aa9d-0e21-42a0-953c-46fa3704826a",
+  "userID": "e014aa9d-0e21-42a0-953c-46fa3704826a",
   "name": "Todo",
   "description": "Buy apples"
 }'
@@ -41,4 +41,5 @@ curl --location --request POST 'http://localhost:8081/api/v1/cmd/create-list' \
 ## Acknowledging reception
 ```shell
 [INF] 2023/05/04 21:10:07.036731 Received a command event with ID: 398aa599-9459-4135-b555-06befa2b8b2e
+[INF] 2023/05/04 21:10:07.17.483514 Processing 'create-list' command with this data: {UserID:e014aa9d-0e21-42a0-953c-46fa3704826a Name:Todo Description:Buy apples}
 ```

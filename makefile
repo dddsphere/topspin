@@ -20,7 +20,6 @@ create-list-command:
   	"description": "Buy apples"\
 	}'
 
-
 .PHONY: openapihttp
 openapihttp:
 	oapi-codegen -generate types -o examples/todo/internal/ports/openapi/todotypes.go -package openapi examples/todo/api/openapi/todo.yml
